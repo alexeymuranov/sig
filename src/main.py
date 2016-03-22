@@ -1,48 +1,49 @@
+#!/usr/bin/env python3
+
 import sys, time
 import argparse, json, math
 import numpy as nmp
 import sympy as smp
 from sympy.parsing.sympy_parser import parse_expr
-from sympy.utilities import lambdify
 import scipy.linalg as la
 
-from sampling import make_sample_params_iterator_maker
-
-from verifications import is_hermitian
+from sampling import make_matrix_sampler,\
+                     make_sample_index_iterator_maker
 
 arg_parser = argparse.ArgumentParser(
-        description='Some algebraic numerical calculations.')
-arg_parser.add_argument('input_file_name',
-        metavar='filename',
-        help='JSON input file name')
+        description='Some algebraic numerical calculations.' )
+arg_parser.add_argument( 'input_file_name',
+                         metavar='filename',
+                         help='JSON input file name' )
 def parse_sampling_number_arg(s):
     try:
         v = int(s)
     except ValueError:
         raise argparse.ArgumentTypeError(
-                "invalid int value: '{}'".format(s))
+                "invalid int value '{}'".format(s) )
     if not v >= 1:
         raise argparse.ArgumentTypeError(
-                '{} is less than 1'.format(v))
+                '{} is less than 1'.format(v) )
     return v
-arg_parser.add_argument('-s', '-n', '--sampling-number',
-        dest='sampling_number',
-        metavar='int',
-        type=parse_sampling_number_arg,
-        required=True,
-        help='number of sampling steps on a semicircle')
+arg_parser.add_argument( '-s', '-n', '--sampling-number',
+                         dest='sampling_number',
+                         metavar='int',
+                         type=parse_sampling_number_arg,
+                         required=True,
+                         help='number of sampling steps on a semicircle' )
 def parse_zero_threshold_arg(s):
     try:
         v = float(s)
     except ValueError:
         raise argparse.ArgumentTypeError(
-                "invalid float value: '{}'".format(s))
+                "invalid float value '{}'".format(s) )
     if not 0 <= v < 1:
         raise argparse.ArgumentTypeError(
-                '{} is not in the interval [0, 1)'.format(v))
+                '{} is not in the interval [0, 1)'.format(v) )
     return v
 default_eigenvalue_zero_threshold = 1e-12
-arg_parser.add_argument('-z', '--zero-threshold',
+arg_parser.add_argument(
+        '-z', '--zero-threshold',
         dest='zero_threshold',
         metavar='delta',
         type=parse_zero_threshold_arg,
@@ -50,18 +51,20 @@ arg_parser.add_argument('-z', '--zero-threshold',
         help='the minimal positive value considered zero when '\
                 'computing the signature, must be in the interval '\
                 '[0, 1), the default value is {}'.format(
-                    default_eigenvalue_zero_threshold))
-arg_parser.add_argument('-g', '--signature-parameter',
+                        default_eigenvalue_zero_threshold ) )
+arg_parser.add_argument(
+        '-g', '--signature-parameter',
         dest='signature_parameter',
         metavar='int',
         type=int,
-        help='the parameter used to detect interesting signatures')
-arg_parser.add_argument('-r', '--periodicity-parameter',
+        help='the parameter used to detect interesting signatures' )
+arg_parser.add_argument(
+        '-r', '--periodicity-parameter',
         dest='periodicity_parameter',
         metavar='int',
         type=int,
         help='the parameter used to select only certain pairs of first '\
-                'two indices')
+                'two indices' )
 args = arg_parser.parse_args()
 
 input_file_name                 = args.input_file_name
@@ -79,28 +82,7 @@ input_processing_start_time = time.process_time()
 
 indeterminates = smp.symbols(data['indeterminates'])
 
-p_mat = [[parse_expr(e) for e in row] for row in data['matrix']]
-
-def zero_func(*_): return 0
-
-# Using `zero_func` for zero's is faster
-def func_from_expr(e):
-    if e == 0:
-        return zero_func
-    else:
-        return lambdify(indeterminates, e)
-
-f_mat = [[func_from_expr(p) for p in row] for row in p_mat]
-
-def get_value_matrix(vals, k):
-    mat = nmp.matrix([[f(*vals) for f in row] for row in f_mat],
-            dtype=complex)
-    mat *= k
-    # Check that the matrix is Hermitian or almost:
-    assert is_hermitian(mat)
-    # Transform the matrix to a Hermitian one:
-    mat += mat.H
-    return mat
+e_mat = [[parse_expr(s) for s in row] for row in data['matrix']]
 
 def analyse_eigenvalues(eigenvalues):
     """
@@ -156,24 +138,18 @@ if interesting_signature_parameter:
 else:
     def signature_is_interesting(_p, _n, _z): return True
 
-def neg_eigval_is_suspiciusly_close_to_zero(v):
-    return v*v < eigenvalue_zero_threshold
+get_sample_matrix = make_matrix_sampler( e_mat,
+                                         indeterminates,
+                                         sampling_number )
 
-def pos_eigval_is_suspiciusly_close_to_zero(v):
-    return v*v < eigenvalue_zero_threshold
+make_sample_index_iterator = make_sample_index_iterator_maker(
+        len(indeterminates),
+        sampling_number,
+        periodicity_selection_parameter )
 
-def zero_threshold_gap_is_suspicious(v1, v2, v3, v4, threshold):
-    return (v1*v1 < threshold or v4*v4 < threshold or
-            3*(-v2) > threshold or 3*v3 > threshold)
-
-make_sample_params_iterator =\
-        make_sample_params_iterator_maker(len(indeterminates),
-                                          sampling_number,
-                                          periodicity_selection_parameter)
-
-print("Initialization took {:.3g}s.".format(
-    time.process_time() - input_processing_start_time),
-    file=sys.stderr)
+print(  "Initialization took {:.3g}s.".format(
+                time.process_time() - input_processing_start_time ),
+        file=sys.stderr )
 
 matrix_comput_time = 0
 eigval_comput_time = 0
@@ -181,43 +157,45 @@ eigval_analys_time = 0
 
 main_loop_start_time = time.process_time()
 
-for inds, vals0, vals, k in make_sample_params_iterator():
+for inds in make_sample_index_iterator():
     time0 = time.process_time()
-    mat = get_value_matrix(vals, k)
+    mat = get_sample_matrix(inds)
     time1 = time.process_time()
     eigenvalues = la.eigvalsh(mat, check_finite=False)
     time2 = time.process_time()
-    signature, (neg_suspicious_vals, pos_suspicious_vals) =\
-            analyse_eigenvalues(eigenvalues)
+    signature, ( neg_suspicious_vals,
+                 pos_suspicious_vals ) = analyse_eigenvalues(eigenvalues)
     time3 = time.process_time()
-    if signature_is_interesting(*signature):
-        print(inds, signature)
-    if neg_suspicious_vals or pos_suspicious_vals:
-        print(inds,
-                "Attention!\n"\
-                '  The following eigenvalues have been considered non-zero, '\
-                        "but are\n"\
-                        "  suspiciously close to 0:\n"\
-                        '    {}'.format(
-                    (neg_suspicious_vals, pos_suspicious_vals)),
-                file=sys.stderr)
     time3 -= time2
     time2 -= time1
     time1 -= time0
     matrix_comput_time += time1
     eigval_comput_time += time2
     eigval_analys_time += time3
-    # print("  Matrix computed in      {:.2e}s,\n"
+    # print(  "  Matrix computed in      {:.2e}s,\n"
     #         "  eigenvalues computed in {:.2e}s,\n"\
     #         '  eigenvalues analysed in {:.2e}s.'.format(
-    #             time1, time2, time3),
-    #         file=sys.stderr)
+    #                 time1, time2, time3 ),
+    #         file=sys.stderr )
+    if neg_suspicious_vals or pos_suspicious_vals:
+        print(  inds,
+                "Attention!\n"\
+                '  The following eigenvalues have been treated as '\
+                "non-zero, but are\n"\
+                "  suspiciously close to 0:\n"\
+                '    {}'.format(
+                           (neg_suspicious_vals, pos_suspicious_vals) ),
+               file=sys.stderr )
+    if signature_is_interesting(*signature):
+        print(inds, signature)
 
-print("Total time spent computing matrices:    {:.3g}s,\n"\
+print(  "Total time spent computing matrices:    {:.3g}s,\n"\
         "total time spent computing eigenvalues: {:.3g}s,\n"\
         'total time spent analysing eigenvalues: {:.3g}s.'.format(
-            matrix_comput_time, eigval_comput_time, eigval_analys_time),
-        file=sys.stderr)
-print('Total time spent in the main loop: {:.3g}s.'.format(
-        (time.process_time() - main_loop_start_time)),
-        file=sys.stderr)
+                matrix_comput_time,
+                eigval_comput_time,
+                eigval_analys_time ),
+        file=sys.stderr )
+print(  'Total time spent in the main loop: {:.3g}s.'.format(
+                (time.process_time() - main_loop_start_time) ),
+        file=sys.stderr )

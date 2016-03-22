@@ -4,17 +4,13 @@ from operator import mul
 from cmath import exp
 import numpy as nmp
 from numpy import pi
+from sympy.utilities import lambdify
 
-def _splice_first(t):
-    x, *ys = t
-    return x + tuple(ys)
+from verifications import is_hermitian
 
-def make_sample_params_iterator_maker(n, steps, r):
-    """
-    Make a generator of iterators that iterate over n-uples of complex
-    numbers on the unit circle with a given number on steps on a half
-    circle.
-    """
+def _zero_func(*__): return 0
+
+def make_matrix_sampler(e_mat, indeterminates, steps):
     # Build look-up tables t1, t2, t3
     t0 = nmp.exp(nmp.linspace(0, pi, steps + 1)[1:steps]*1j)
     t0 /= nmp.abs(t0)
@@ -28,24 +24,50 @@ def make_sample_params_iterator_maker(n, steps, r):
     t2 = -nmp.conj(t1)
     t3 = -t1 + 1
 
-    def vals_from_inds(inds):
-        return (inds,
-                tuple(t1[i] for i in inds),
-                tuple(t2[i] for i in inds),
-                reduce(mul, (t3[i] for i in inds)))
+    # Using `zero_func` for zeros is faster
+    def func_from_expr(e):
+        if e == 0:
+            return _zero_func
+        else:
+            return lambdify(indeterminates, e)
+
+    f_mat = [[func_from_expr(p) for p in row] for row in e_mat]
+
+    def get_sample_matrix(inds):
+        vals = tuple(t2[i] for i in inds)
+        mat = nmp.matrix(
+                [[f(*vals) for f in row] for row in f_mat],
+                dtype=complex )
+        mat *= reduce(mul, (t3[i] for i in inds))
+        # Check that the matrix is Hermitian or almost:
+        assert is_hermitian(mat)
+        # Transform the matrix to a Hermitian one:
+        mat += mat.H
+        return mat
+
+    return get_sample_matrix
+
+def _splice_first(t):
+    x, *ys = t
+    return x + tuple(ys)
+
+def make_sample_index_iterator_maker(n, steps, r):
+    """
+    Make a generator of iterators that iterate over n-uples of integers
+    that parametrize certain complex numbers on the unit circle with a
+    given number of steps on a semicircle.
+    """
 
     indr1 = range(1, steps + 1)
     indr2 = range(-steps + 1, 0)
 
     if r is None:
-        def make_ind_iterator():
-            return\
-                itt.product(
-                        indr1,
-                        *[itt.chain(indr1, indr2) for _ in range(1, n)])
+        return lambda: itt.product(
+                indr1,
+                *[itt.chain(indr1, indr2) for __ in range(1, n)] )
     else:
         if n == 1:
-            def make_ind_iterator(): return indr1
+            return lambda: iter(indr1)
         else:
             if r % n == 0:
                 rr = [r]
@@ -57,13 +79,11 @@ def make_sample_params_iterator_maker(n, steps, r):
                         i2 = (m - i1 + n - 1) % (2*n) - n + 1
                         yield (i1, i2)
             if n == 2:
-                make_ind_iterator = make_2ind_iterator
+                return make_2ind_iterator
             elif n >= 3:
-                def make_ind_iterator():
-                    return map(_splice_first,
-                            itt.product(
+                return lambda: map(
+                        _splice_first,
+                        itt.product(
                                 make_2ind_iterator(),
-                                *[itt.chain(indr1, indr2) for
-                                    _ in range(2, n)]))
-
-    return lambda: map(vals_from_inds, make_ind_iterator())
+                                *[ itt.chain(indr1, indr2) for
+                                        __ in range(2, n) ] ) )
