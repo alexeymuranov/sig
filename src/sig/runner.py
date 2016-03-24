@@ -1,6 +1,7 @@
 from json import load as load_json
 from sympy import symbols
 from sympy.parsing.sympy_parser import parse_expr
+from sympy.polys.polytools import poly
 from sys import stderr
 from time import process_time
 
@@ -24,6 +25,8 @@ def go( input_file_name,
     indeterminates = symbols(data['indeterminates'])
 
     e_mat = [[parse_expr(s) for s in row] for row in data['matrix']]
+    p_mat = [[poly(e, *indeterminates) for e in row] for
+                row in e_mat]
 
     # TODO: use `logging` module instead of printing to `stderr`:
     #
@@ -38,7 +41,7 @@ def go( input_file_name,
 
     initialization_start_time = process_time()
 
-    matrix_sampler = make_matrix_sampler( e_mat,
+    matrix_sampler = make_matrix_sampler( p_mat,
                                           indeterminates,
                                           sampling_number )
 
