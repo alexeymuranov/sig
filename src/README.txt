@@ -5,3 +5,7 @@ contents of this directory (for example, it may skip this README).
 
 If distributing this directory on its own, consider renaming it to
 "{project name}-{source version}".
+
+When distributing this directory on its own, the Cython modules will need to
+be built manually, which may be not a simple task.  (Otherwise they are
+normally built automatically during package installation.)

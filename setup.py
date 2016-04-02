@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from Cython.Build import cythonize
 from setuptools import setup, find_packages
 
 root_dir = 'src'
@@ -17,6 +18,7 @@ setup(
 
   package_dir = {'': root_dir},
   packages = find_packages(root_dir),
+  ext_modules = cythonize('/'.join([root_dir, '**', '*.pyx'])),
   entry_points = {
     'console_scripts': [
       '{0} = {0}._extra_api_for_setuptools:main_entry_point'.format(app_name)
