@@ -29,7 +29,7 @@ def make_matrix_sampler(e_mat, indeterminates, steps):
         else:
             return lambdify(indeterminates, e)
 
-    f_mat = [[func_from_expr(p) for p in row] for row in e_mat]
+    f_mat = [[func_from_expr(e) for e in row] for row in e_mat]
 
     def matrix_sampler(inds):
         vals = tuple(t2[i] for i in inds)
