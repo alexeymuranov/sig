@@ -23,54 +23,66 @@ def parse_zero_threshold_arg(s):
         raise ArgumentTypeError("invalid float value '{}'".format(s))
     if not 0 <= v < 1:
         raise ArgumentTypeError(
-                '{} is not in the interval [0, 1)'.format(v) )
+          '{} is not in the interval [0, 1)'.format(v)
+        )
     return v
 
 
 def parse_args(args):
     arg_parser = ArgumentParser(
-            description = 'Some algebraic numerical calculations.' )
-    arg_parser.add_argument( 'input_file_name',
-                             metavar = 'filename',
-                             help = 'JSON input file name' )
+      description = 'Some algebraic numerical calculations.'
+    )
     arg_parser.add_argument(
-            '-s', '-n', '--sampling-number',
-            dest = 'sampling_number',
-            metavar = 'int',
-            type = parse_sampling_number_arg,
-            required = True,
-            help = 'number of sampling steps on a semicircle' )
+      'input_file_name',
+      metavar = 'filename',
+      help = 'JSON input file name'
+    )
+    arg_parser.add_argument(
+      '-s', '-n', '--sampling-number',
+      dest = 'sampling_number',
+      metavar = 'int',
+      type = parse_sampling_number_arg,
+      required = True,
+      help = 'number of sampling steps on a semicircle'
+    )
     default_eigenvalue_zero_threshold = 1e-12
     arg_parser.add_argument(
-            '-z', '--zero-threshold',
-            dest = 'zero_threshold',
-            metavar = 'delta',
-            type = parse_zero_threshold_arg,
-            default = default_eigenvalue_zero_threshold,
-            help = 'the minimal positive value considered zero when '
-                    'computing the signature, must be in the interval '
-                    '[0, 1), the default value is {}'.format(
-                            default_eigenvalue_zero_threshold ) )
+      '-z', '--zero-threshold',
+      dest = 'zero_threshold',
+      metavar = 'delta',
+      type = parse_zero_threshold_arg,
+      default = default_eigenvalue_zero_threshold,
+      help = (
+        'the minimal positive value considered zero when '
+        'computing the signature, must be in the interval '
+        '[0, 1), the default value is {}'.format(
+          default_eigenvalue_zero_threshold
+        )
+      )
+    )
     arg_parser.add_argument(
-            '-g', '--signature-parameter',
-            dest = 'signature_parameter',
-            metavar = 'int',
-            type = int,
-            help = 'the parameter used to detect interesting '\
-                    'signatures' )
+      '-g', '--signature-parameter',
+      dest = 'signature_parameter',
+      metavar = 'int',
+      type = int,
+      help = ( 'the parameter used to detect interesting '
+               'signatures' )
+    )
     arg_parser.add_argument(
-            '-r', '--periodicity-parameter',
-            dest = 'periodicity_parameter',
-            metavar = 'int',
-            type = int,
-            help = 'the parameter used to select only certain pairs of '
-                    'first two indices' )
+      '-r', '--periodicity-parameter',
+      dest = 'periodicity_parameter',
+      metavar = 'int',
+      type = int,
+      help = ( 'the parameter used to select only certain pairs of '
+               'first two indices' )
+    )
     arg_parser.add_argument(
-            '-c', '--with-caution',
-            dest = 'caution',
-            action = 'store_true',
-            help = 'test the computed matrices for being not too far '
-                    'from being Hermitian' )
+      '-c', '--with-caution',
+      dest = 'caution',
+      action = 'store_true',
+      help = ( 'test the computed matrices for being not too far '
+               'from being Hermitian' )
+    )
     return arg_parser.parse_args(args)
 
 
