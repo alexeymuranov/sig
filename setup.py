@@ -31,6 +31,6 @@ setup(  name = app_name,
         author = 'Alexey Muranov',
         author_email = 'alexeymuranov@users.noreply.github.com',
         description = 'Read some input, generate some matrices, '
-                'compute their signatures, select "interesting"'
+                'compute their signatures, select "interesting" '
                 'signatures, print them out.',
         url = 'https://github.com/alexeymuranov/sig' )
