@@ -12,10 +12,10 @@ def is_hermitian(mat, relative_discrepancy_limit=1e-10):
     dmat_imag = dmat.imag
     mat_real = mat.real
     mat_imag = mat.imag
-    dmat_scale = norm(dmat_real, ord=1) + norm(dmat_real, ord=inf) +\
-                 norm(dmat_imag, ord=1) + norm(dmat_imag, ord=inf)
-    mat_scale = norm(mat_real, ord=1) + norm(mat_real, ord=inf) +\
-                norm(mat_imag, ord=1) + norm(mat_imag, ord=inf)
+    dmat_scale = ( norm(dmat_real, ord=1) + norm(dmat_real, ord=inf) +
+                   norm(dmat_imag, ord=1) + norm(dmat_imag, ord=inf) )
+    mat_scale = ( norm(mat_real, ord=1) + norm(mat_real, ord=inf) +
+                  norm(mat_imag, ord=1) + norm(mat_imag, ord=inf) )
     return dmat_scale <= relative_discrepancy_limit*mat_scale
 
 
@@ -30,15 +30,20 @@ if __name__ == '__main__':
         import numpy as nmp
         hermitian_matrix = nmp.matrix([[1, 1+2j], [1-2j, 3]], dtype=complex)
         almost_hermitian_matrix1 = nmp.matrix(
-                [[1, 1+2j], [1-2.00000000001j, 3]], dtype=complex )
+          [[1, 1+2j], [1-2.00000000001j, 3]], dtype=complex
+        )
         almost_hermitian_matrix2 = nmp.matrix(
-                [[1, 1+2j], [1-2j, 3+0.00000000001j]], dtype=complex )
+          [[1, 1+2j], [1-2j, 3+0.00000000001j]], dtype=complex
+        )
         non_hermitian_matrix1 = nmp.matrix(
-                [[1, 1+2j], [1-2.1j, 3]], dtype=complex )
+          [[1, 1+2j], [1-2.1j, 3]], dtype=complex
+        )
         non_hermitian_matrix2 = nmp.matrix(
-                [[1, 1+2j], [1-2j, 3+0.1j]], dtype=complex )
+          [[1, 1+2j], [1-2j, 3+0.1j]], dtype=complex
+        )
         non_hermitian_matrix3 = nmp.matrix(
-                [[1j, 1], [1, -1j]], dtype=complex )
+          [[1j, 1], [1, -1j]], dtype=complex
+        )
         assert is_hermitian( hermitian_matrix,
                              relative_discrepancy_limit = 1e-10)
         assert is_hermitian( almost_hermitian_matrix1,
