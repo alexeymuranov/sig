@@ -19,8 +19,9 @@ def make_sample_index_iterator_maker(n, steps, r):
 
     if r is None:
         return lambda: iter_product(
-                indr1,
-                *[iter_chain(indr1, indr2) for __ in range(1, n)] )
+          indr1,
+          *[iter_chain(indr1, indr2) for __ in range(1, n)]
+        )
     else:
         if n == 1:
             return lambda: iter(indr1)
@@ -38,11 +39,11 @@ def make_sample_index_iterator_maker(n, steps, r):
                 return make_2ind_iterator
             elif n >= 3:
                 return lambda: map(
-                        _splice_first,
-                        iter_product(
-                                make_2ind_iterator(),
+                  _splice_first,
+                  iter_product( make_2ind_iterator(),
                                 *[ iter_chain(indr1, indr2)
-                                   for __ in range(2, n) ] ) )
+                                   for __ in range(2, n) ] )
+                )
 
 
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
