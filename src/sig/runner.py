@@ -25,9 +25,12 @@ def go( input_file_name,
 
     e_mat = [[parse_expr(s) for s in row] for row in data['matrix']]
 
-    print(  'Input parsing took {:.3g}s.'.format(
-                    process_time() - input_parsing_start_time ),
-            file = stderr )
+    print(
+      'Input parsing took {:.3g}s.'.format(
+        process_time() - input_parsing_start_time
+      ),
+      file = stderr
+    )
 
     initialization_start_time = process_time()
 
@@ -36,13 +39,17 @@ def go( input_file_name,
                                           sampling_number )
 
     sample_index_iterator_maker = make_sample_index_iterator_maker(
-            len(indeterminates),
-            sampling_number,
-            periodicity_selection_parameter )
+      len(indeterminates),
+      sampling_number,
+      periodicity_selection_parameter
+    )
 
-    print(  'Initialization took {:.3g}s.'.format(
-                    process_time() - initialization_start_time ),
-            file = stderr )
+    print(
+      'Initialization took {:.3g}s.'.format(
+        process_time() - initialization_start_time
+      ),
+      file = stderr
+    )
 
     process_data( matrix_sampler,
                   sample_index_iterator_maker,
