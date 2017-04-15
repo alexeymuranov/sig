@@ -86,13 +86,13 @@ def parse_args(args):
     return arg_parser.parse_args(args)
 
 
-def main(args):
+def main(argv):
     # NOTE:  If parsing arguments fails or if the program is run with `-h`
     #   switch to just get the help message, the rest of the function will
     #   not be executed.  Parsing arguments before importing and defining
     #   everything thus saves time if the user runs the program with `-h`
     #   flag or if the user makes a mistake in command line arguments.
-    parsed_args = parse_args(args)
+    parsed_args = parse_args(argv[1:])
 
     # NOTE:  Putting imports here seems to be against Style Guide for
     #   Python Code (PEP 8).  However, having imports in the body of

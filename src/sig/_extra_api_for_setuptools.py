@@ -7,4 +7,4 @@ from .cli import main
 
 
 def main_entry_point():
-    return main(argv[1:])
+    return main(argv)

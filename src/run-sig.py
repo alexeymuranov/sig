@@ -23,4 +23,4 @@ from sig.cli import main
 
 # NOTE: `sys.exit` is useless here if `main` calls it anyway, but
 #   harmless and normally expected
-sys_exit(main(argv[1:]))
+sys_exit(main(argv))
