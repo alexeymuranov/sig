@@ -124,10 +124,9 @@ def process_data( matrix_sampler,
         time1 = process_time()
         eigenvalues = eigvalsh(mat, check_finite=False)
         time2 = process_time()
-        (
-          signature,
+        ( signature,
           (neg_suspicious_vals, pos_suspicious_vals)
-        ) = analyse_eigenvalues(eigenvalues)
+          ) = analyse_eigenvalues(eigenvalues)
         time3 = process_time()
         time3 -= time2
         time2 -= time1
@@ -144,32 +143,27 @@ def process_data( matrix_sampler,
         #   file = message_output_dest
         # )
         if neg_suspicious_vals or pos_suspicious_vals:
-            print(
-              inds,
-              ( ": Attention!\n"
-                '  The following eigenvalues have been treated as '
-                "non-zero, but are\n"
-                "  suspiciously close to 0:\n"
-                '    {}' ).format(( neg_suspicious_vals,
-                                    pos_suspicious_vals )),
-              file = message_output_dest
-            )
+            print( inds,
+                   ( ": Attention!\n"
+                     '  The following eigenvalues have been treated as '
+                     "non-zero, but are\n"
+                     "  suspiciously close to 0:\n"
+                     '    {}' ).format( ( neg_suspicious_vals,
+                                          pos_suspicious_vals ) ),
+                   file = message_output_dest )
         if signature_is_interesting(signature):
             print(inds, ':', signature, file=output_dest)
 
-    print(
-      (
-        "Total time spent in the main loop: {:.3g}s.\n"
-        "This includes the time spent\n"
-        "  - computing matrices:    {:.3g}s,\n"
-        "  - computing eigenvalues: {:.3g}s,\n"
-        '  - analysing eigenvalues: {:.3g}s.'
-      ).format( (process_time() - main_loop_start_time),
-                matrix_comput_time,
-                eigval_comput_time,
-                eigval_analys_time ),
-      file = message_output_dest
-    )
+    print( ( "Total time spent in the main loop: {:.3g}s.\n"
+             "This includes the time spent\n"
+             "  - computing matrices:    {:.3g}s,\n"
+             "  - computing eigenvalues: {:.3g}s,\n"
+             '  - analysing eigenvalues: {:.3g}s.'
+             ).format( (process_time() - main_loop_start_time),
+                       matrix_comput_time,
+                       eigval_comput_time,
+                       eigval_analys_time ),
+           file = message_output_dest )
 
 
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

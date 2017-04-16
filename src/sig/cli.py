@@ -11,8 +11,10 @@ def parse_sampling_number_arg(s):
         v = int(s)
     except ValueError:
         raise ArgumentTypeError("invalid int value '{}'".format(s))
+
     if not v >= 1:
         raise ArgumentTypeError('{} is less than 1'.format(v))
+
     return v
 
 
@@ -21,10 +23,12 @@ def parse_zero_threshold_arg(s):
         v = float(s)
     except ValueError:
         raise ArgumentTypeError("invalid float value '{}'".format(s))
+
     if not 0 <= v < 1:
         raise ArgumentTypeError(
           '{} is not in the interval [0, 1)'.format(v)
         )
+
     return v
 
 
@@ -53,11 +57,10 @@ def parse_argv(argv):
       metavar = 'delta',
       type = parse_zero_threshold_arg,
       default = default_eigenvalue_zero_threshold,
-      help = (
-        'the minimal positive value considered zero when '
-        'computing the signature, must be in the interval '
-        '[0, 1), the default value is {}'
-      ).format(default_eigenvalue_zero_threshold)
+      help = ( 'the minimal positive value considered zero when '
+               'computing the signature, must be in the interval '
+               '[0, 1), the default value is {}'
+               ).format(default_eigenvalue_zero_threshold)
     )
     arg_parser.add_argument(
       '-g', '--signature-parameter',

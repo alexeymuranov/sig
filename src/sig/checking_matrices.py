@@ -12,10 +12,10 @@ def is_hermitian(mat, relative_discrepancy_limit=1e-10):
     dmat_imag = dmat.imag
     mat_real = mat.real
     mat_imag = mat.imag
-    dmat_scale = ( norm(dmat_real, ord=1) + norm(dmat_real, ord=inf) +
-                   norm(dmat_imag, ord=1) + norm(dmat_imag, ord=inf) )
-    mat_scale = ( norm(mat_real, ord=1) + norm(mat_real, ord=inf) +
-                  norm(mat_imag, ord=1) + norm(mat_imag, ord=inf) )
+    dmat_scale = ( norm(dmat_real, ord=1) + norm(dmat_real, ord=inf)
+                 + norm(dmat_imag, ord=1) + norm(dmat_imag, ord=inf) )
+    mat_scale = ( norm(mat_real, ord=1) + norm(mat_real, ord=inf)
+                + norm(mat_imag, ord=1) + norm(mat_imag, ord=inf) )
     return dmat_scale <= relative_discrepancy_limit*mat_scale
 
 
@@ -28,7 +28,10 @@ if __name__ == '__main__':
 
     def _smoke_test():
         import numpy as nmp
-        hermitian_matrix = nmp.matrix([[1, 1+2j], [1-2j, 3]], dtype=complex)
+        hermitian_matrix = nmp.matrix(
+          [[1, 1+2j], [1-2j, 3]],
+          dtype = complex
+        )
         almost_hermitian_matrix1 = nmp.matrix(
           [[1, 1+2j], [1-2.00000000001j, 3]],
           dtype = complex
