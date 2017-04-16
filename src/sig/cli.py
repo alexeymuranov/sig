@@ -28,8 +28,9 @@ def parse_zero_threshold_arg(s):
     return v
 
 
-def parse_args(args):
+def parse_argv(argv):
     arg_parser = ArgumentParser(
+      prog = argv[0],
       description = 'Some algebraic numerical calculations.'
     )
     arg_parser.add_argument(
@@ -81,7 +82,8 @@ def parse_args(args):
       help = ( 'test the computed matrices for being not too far '
                'from being Hermitian' )
     )
-    return arg_parser.parse_args(args)
+
+    return arg_parser.parse_args(argv[1:])
 
 
 def main(argv):
@@ -90,7 +92,7 @@ def main(argv):
     #   not be executed.  Parsing arguments before importing and defining
     #   everything thus saves time if the user runs the program with `-h`
     #   flag or if the user makes a mistake in command line arguments.
-    parsed_args = parse_args(argv[1:])
+    parsed_args = parse_argv(argv)
 
     # NOTE:  Putting imports here seems to be against Style Guide for
     #   Python Code (PEP 8).  However, having imports in the body of
