@@ -55,10 +55,8 @@ def parse_args(args):
       help = (
         'the minimal positive value considered zero when '
         'computing the signature, must be in the interval '
-        '[0, 1), the default value is {}'.format(
-          default_eigenvalue_zero_threshold
-        )
-      )
+        '[0, 1), the default value is {}'
+      ).format(default_eigenvalue_zero_threshold)
     )
     arg_parser.add_argument(
       '-g', '--signature-parameter',

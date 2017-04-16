@@ -117,7 +117,7 @@ def process_data( matrix_sampler,
                     ( ": Attention!\n"
                       '  The computed matrix does not seem to be '
                       "sufficienly close to Hermitian:\n"
-                      '{}'.format(mat) ),
+                      '{}' ).format(mat),
                     file = message_output_dest )
         # Transform the matrix to a truly Hermitian one:
         mat += mat.H
@@ -138,21 +138,20 @@ def process_data( matrix_sampler,
         # print(
         #   ( "  Matrix computed in      {:.2e}s,\n"
         #     "  eigenvalues computed in {:.2e}s,\n"
-        #     '  eigenvalues analysed in {:.2e}s.'.format( time1,
-        #                                                  time2,
-        #                                                  time3 ) ),
+        #     '  eigenvalues analysed in {:.2e}s.' ).format( time1,
+        #                                                    time2,
+        #                                                    time3 ),
         #   file = message_output_dest
         # )
         if neg_suspicious_vals or pos_suspicious_vals:
             print(
               inds,
-              (
-                ": Attention!\n"
+              ( ": Attention!\n"
                 '  The following eigenvalues have been treated as '
                 "non-zero, but are\n"
                 "  suspiciously close to 0:\n"
-                '    {}'.format((neg_suspicious_vals, pos_suspicious_vals))
-              ),
+                '    {}' ).format(( neg_suspicious_vals,
+                                    pos_suspicious_vals )),
               file = message_output_dest
             )
         if signature_is_interesting(signature):
@@ -164,13 +163,11 @@ def process_data( matrix_sampler,
         "This includes the time spent\n"
         "  - computing matrices:    {:.3g}s,\n"
         "  - computing eigenvalues: {:.3g}s,\n"
-        '  - analysing eigenvalues: {:.3g}s.'.format(
-          (process_time() - main_loop_start_time),
-          matrix_comput_time,
-          eigval_comput_time,
-          eigval_analys_time
-        )
-      ),
+        '  - analysing eigenvalues: {:.3g}s.'
+      ).format( (process_time() - main_loop_start_time),
+                matrix_comput_time,
+                eigval_comput_time,
+                eigval_analys_time ),
       file = message_output_dest
     )
 
