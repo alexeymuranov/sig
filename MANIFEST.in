@@ -1,2 +1,2 @@
 include README.txt
-include docs/*.txt
+include doc/*.txt
