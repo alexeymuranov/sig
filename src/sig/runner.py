@@ -25,6 +25,10 @@ def go( input_file_name,
 
     e_mat = [[parse_expr(s) for s in row] for row in data['matrix']]
 
+    # TODO: use `logging` module instead of printing to `stderr`:
+    #
+    #     https://docs.python.org/3/library/logging.html
+    #
     print(
       'Input parsing took {:.3g}s.'.format(
         process_time() - input_parsing_start_time
@@ -44,6 +48,7 @@ def go( input_file_name,
       periodicity_selection_parameter
     )
 
+    # TODO: use `logging` module instead of printing to `stderr`
     print(
       'Initialization took {:.3g}s.'.format(
         process_time() - initialization_start_time

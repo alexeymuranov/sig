@@ -76,6 +76,7 @@ def make_interesting_signature_detector(interesting_signature_parameter):
         return lambda _signature: True
 
 
+# TODO: use `logging` module instead of printing to `stderr`
 def process_data( matrix_sampler,
                   sample_index_iterator_maker,
                   eigenvalue_zero_threshold,
