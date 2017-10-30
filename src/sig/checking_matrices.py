@@ -21,12 +21,12 @@ def is_hermitian(mat, relative_discrepancy_limit=1e-10):
 
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 # --------------------------------------------------------------------------
-# ## Smoke testing
+# ## Basic testing
 # --------------------------------------------------------------------------
 
 if __name__ == '__main__':
 
-    def _smoke_test():
+    def _basic_test():
         import numpy as nmp
         hermitian_matrix = nmp.matrix(
           [[1, 1+2j], [1-2j, 3]],
@@ -69,11 +69,11 @@ if __name__ == '__main__':
         assert not is_hermitian( almost_hermitian_matrix2,
                                  relative_discrepancy_limit = 1e-12 )
 
-    def _run_and_time_smoke_test():
+    def _run_and_time_basic_test():
         from time import process_time
-        smoke_test_start_time = process_time()
-        _smoke_test()
-        return process_time() - smoke_test_start_time
+        basic_test_start_time = process_time()
+        _basic_test()
+        return process_time() - basic_test_start_time
 
-    t = _run_and_time_smoke_test()
-    print('The module has passed a smoke test in {:.3g}s.'.format(t))
+    t = _run_and_time_basic_test()
+    print('The module has passed a basic test in {:.3g}s.'.format(t))

@@ -43,20 +43,20 @@ def make_matrix_sampler(e_mat, indeterminates, steps):
 
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 # --------------------------------------------------------------------------
-# ## Smoke testing
+# ## Basic testing
 # --------------------------------------------------------------------------
 
 if __name__ == '__main__':
 
-    def _smoke_test():
+    def _basic_test():
         # TODO: implement
         assert False
 
-    def _run_and_time_smoke_test():
+    def _run_and_time_basic_test():
         from time import process_time
-        smoke_test_start_time = process_time()
-        _smoke_test()
-        return process_time() - smoke_test_start_time
+        basic_test_start_time = process_time()
+        _basic_test()
+        return process_time() - basic_test_start_time
 
-    t = _run_and_time_smoke_test()
-    print('The module has passed a smoke test in {:.3g}s.'.format(t))
+    t = _run_and_time_basic_test()
+    print('The module has passed a basic test in {:.3g}s.'.format(t))
