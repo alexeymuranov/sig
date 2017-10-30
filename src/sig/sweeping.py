@@ -53,15 +53,11 @@ def make_sample_index_iterator_maker(n, steps, r):
 
 if __name__ == '__main__':
 
-    def _basic_test():
+    from ._basic_testing_tools import run_and_time
+
+    def _basic_tests():
         # TODO: implement
         assert False
 
-    def _run_and_time_basic_test():
-        from time import process_time
-        basic_test_start_time = process_time()
-        _basic_test()
-        return process_time() - basic_test_start_time
-
-    t = _run_and_time_basic_test()
-    print('The module has passed a basic test in {:.3g}s.'.format(t))
+    t = run_and_time(_basic_tests)
+    print('The module passed basic tests in {:.3g}s.'.format(t))
