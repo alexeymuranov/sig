@@ -46,7 +46,7 @@ def make_matrix_sampler(e_mat, indeterminates, steps):
 # ## Basic testing
 # --------------------------------------------------------------------------
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from ._basic_testing_tools import run_and_time
 
@@ -55,4 +55,4 @@ if __name__ == '__main__':
         assert False
 
     t = run_and_time(_basic_tests)
-    print('The module passed basic tests in {:.3g}s.'.format(t))
+    print("The module passed basic tests in {:.3g}s.".format(t))

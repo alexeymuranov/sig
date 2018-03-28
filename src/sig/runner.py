@@ -21,20 +21,17 @@ def go( input_file_name,
 
     input_parsing_start_time = process_time()
 
-    indeterminates = symbols(data['indeterminates'])
+    indeterminates = symbols(data["indeterminates"])
 
-    e_mat = [[parse_expr(s) for s in row] for row in data['matrix']]
+    e_mat = [[parse_expr(s) for s in row] for row in data["matrix"]]
 
     # TODO: use `logging` module instead of printing to `stderr`:
     #
     #     https://docs.python.org/3/library/logging.html
     #
-    print(
-      'Input parsing took {:.3g}s.'.format(
-        process_time() - input_parsing_start_time
-      ),
-      file = stderr
-    )
+    print( "Input parsing took {:.3g}s."
+           .format(process_time() - input_parsing_start_time),
+           file = stderr )
 
     initialization_start_time = process_time()
 
@@ -43,18 +40,15 @@ def go( input_file_name,
                                           sampling_number )
 
     sample_index_iterator_maker = make_sample_index_iterator_maker(
-      len(indeterminates),
-      sampling_number,
-      periodicity_selection_parameter
+        len(indeterminates),
+        sampling_number,
+        periodicity_selection_parameter
     )
 
     # TODO: use `logging` module instead of printing to `stderr`
-    print(
-      'Initialization took {:.3g}s.'.format(
-        process_time() - initialization_start_time
-      ),
-      file = stderr
-    )
+    print( "Initialization took {:.3g}s."
+           .format(process_time() - initialization_start_time),
+           file = stderr )
 
     process_data( matrix_sampler,
                   sample_index_iterator_maker,
@@ -68,7 +62,7 @@ def go( input_file_name,
 # ## Basic testing
 # --------------------------------------------------------------------------
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from ._basic_testing_tools import run_and_time
 
@@ -77,4 +71,4 @@ if __name__ == '__main__':
         assert False
 
     t = run_and_time(_basic_tests)
-    print('The module passed basic tests in {:.3g}s.'.format(t))
+    print("The module passed basic tests in {:.3g}s.".format(t))

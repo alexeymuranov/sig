@@ -3,4 +3,4 @@
 # package represented by the containing directory is imported.  Note that
 # a package is imported before any contained module or subpackage is.
 
-__version__ = '0.1b0.dev0'
+__version__ = "0.1b0.dev0"

@@ -19,30 +19,35 @@ def make_sample_index_iterator_maker(n, steps, r):
 
     if r is None:
         return lambda: iter_product(
-          indr1,
-          *[iter_chain(indr1, indr2) for __ in range(1, n)]
+            indr1,
+            *[iter_chain(indr1, indr2) for __ in range(1, n)]
         )
+
     else:
         if n == 1:
             return lambda: iter(indr1)
+
         else:
             if r % n == 0:
                 rr = [r]
             else:
                 rr = [r, -r]
+
             def make_2ind_iterator():
                 for i1 in indr1:
                     for m in rr:
                         i2 = (m - i1 + n - 1) % (2*n) - n + 1
                         yield (i1, i2)
+
             if n == 2:
                 return make_2ind_iterator
+
             elif n >= 3:
                 return lambda: map(
-                  _splice_first,
-                  iter_product( make_2ind_iterator(),
-                                *[ iter_chain(indr1, indr2)
-                                   for __ in range(2, n) ] )
+                    _splice_first,
+                    iter_product( make_2ind_iterator(),
+                                  *[ iter_chain(indr1, indr2)
+                                     for __ in range(2, n) ] )
                 )
 
 
@@ -51,7 +56,7 @@ def make_sample_index_iterator_maker(n, steps, r):
 # ## Basic testing
 # --------------------------------------------------------------------------
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from ._basic_testing_tools import run_and_time
 
@@ -60,4 +65,4 @@ if __name__ == '__main__':
         assert False
 
     t = run_and_time(_basic_tests)
-    print('The module passed basic tests in {:.3g}s.'.format(t))
+    print("The module passed basic tests in {:.3g}s.".format(t))
