@@ -20,7 +20,7 @@ def make_sample_index_iterator_maker(n, steps, r):
     if r is None:
         return lambda: iter_product(
             indr1,
-            *[iter_chain(indr1, indr2) for __ in range(1, n)]
+            *[iter_chain(indr1, indr2) for _ in range(1, n)]
         )
 
     else:
@@ -47,7 +47,7 @@ def make_sample_index_iterator_maker(n, steps, r):
                     _splice_first,
                     iter_product( make_2ind_iterator(),
                                   *[ iter_chain(indr1, indr2)
-                                     for __ in range(2, n) ] )
+                                     for _ in range(2, n) ] )
                 )
 
 

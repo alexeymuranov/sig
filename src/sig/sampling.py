@@ -20,7 +20,7 @@ def make_matrix_sampler(e_mat, indeterminates, steps):
     t2 = -nmp.conj(t1)
     t3 = -t1 + 1
 
-    def zero_func(*__): return 0
+    def zero_func(*_): return 0
 
     # Using `zero_func` for zeros is faster
     def func_from_expr(e):
