@@ -28,10 +28,10 @@ def make_sample_index_iterator_maker(n, steps, r):
             return lambda: iter(indr1)
 
         else:
-            if r % n == 0:
-                rr = [r]
-            else:
+            if r % n:
                 rr = [r, -r]
+            else:
+                rr = [r]
 
             def make_2ind_iterator():
                 for i1 in indr1:

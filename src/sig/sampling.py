@@ -24,10 +24,10 @@ def make_matrix_sampler(e_mat, indeterminates, steps):
 
     # Using `zero_func` for zeros is faster
     def func_from_expr(e):
-        if e == 0:
-            return zero_func
-        else:
+        if e:
             return lambdify(indeterminates, e)
+        else:
+            return zero_func
 
     f_mat = [[func_from_expr(e) for e in row] for row in e_mat]
 
