@@ -10,7 +10,7 @@
 #
 # instead of
 #
-#     ./run-sig.py
+#     ./sig.py
 #
 # NOTE:  With Setuptools the package can be configured for installation
 #   with pip so that installing the package will automatically generate
